@@ -1,0 +1,19 @@
+{
+  "name": "ps-ultility",
+  "version": "1.0.1",
+  "description": "ps-ultility",
+  "main": "ps-ultility.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mayalust/ps-ultility.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mayalust/ps-ultility/issues"
+  },
+  "homepage": "https://github.com/mayalust/ps-ultility#readme"
+}
