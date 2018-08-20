@@ -359,6 +359,6 @@
   }
   return {
     urlparser : urlparser,
-    Date : dh
+    dateparser : dh
   }
 });
