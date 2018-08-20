@@ -61,7 +61,7 @@
       hash : match[6]
     };
   };
-  function dh(){
+  var dh = (function(){
     /**
      * Date Handler Created by leonlin.
      * e.g.
@@ -356,7 +356,8 @@
         }
       }
     })
-  }
+    return DateHandler;
+  })()
   return {
     urlparser : urlparser,
     dateparser : dh
