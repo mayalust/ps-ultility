@@ -368,6 +368,7 @@
   })()
   return {
     urlparser : urlparser,
-    dateparser : dh
+    dateparser : dh,
+    remove$$hashKey : remove$$hashKey
   }
 });
