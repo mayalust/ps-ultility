@@ -61,6 +61,14 @@
       hash : match[6]
     };
   };
+  function remove$$hashKey(str){
+    let regex = /\"\${2}hashKey\"\s*:\"[^"]*\",?/g;
+    while(regex.test(str)){
+      str = str.replace(regex, "");
+    };
+    console.log(str);
+    return str;
+  };
   var dh = (function(){
     /**
      * Date Handler Created by leonlin.
