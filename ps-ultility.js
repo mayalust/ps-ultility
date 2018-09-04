@@ -62,7 +62,7 @@
     };
   };
   function remove$$hashKey(str){
-    let regex = /\"\${2}hashKey\"\s*:\"[^"]*\",?/g;
+    let regex = /(?:,\s*\"\${2}hashKey\"\s*:\s*\"[^"]*\"\s*)|(?:\"\${2}hashKey\"\s*:\s*\"[^"]*\"\s*,)/g;
     while(regex.test(str)){
       str = str.replace(regex, "");
     };
