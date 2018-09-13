@@ -12,6 +12,7 @@
   }
 })(this, function(){
   var tostring = Object.prototype.toString,
+    pop = Array.prototype.pop,
     push = Array.prototype.push,
     slice = Array.prototype.slice,
     shift = Array.prototype.shift,
@@ -158,7 +159,7 @@
     })
   }
   function getStyle(dom, name){
-    
+
   }
   function addClass(elem, cls){
     var oldcls = elem.getAttribute("class"),
@@ -215,18 +216,21 @@
   function createDocumentFragment(){
     return document.createDocumentFragment();
   }
+  function topArray(obj){
+    return slice.call(obj);
+  }
   function findElement(context, callback){
-    var stack = context.children,len, item;
+    var stack = topArray(context.children),len, item;
     while(item=stack.pop()){
       if(callback(item)){ return item; }
-      item.children ? push.apply(stack,item.children) : null;
+      item.children ? push.apply(stack,topArray(item.children)) : null;
     }
   }
   function filterElement(context, callback){
-    var stack = context.children,len, item, rs = [];
+    var stack = topArray(context.children),len, item, rs = [];
     while(item=stack.pop()){
       callback(item) ? rs.push(item) : null;
-      item.children ? push.apply(stack,item.children) : null;
+      item.children ? push.apply(stack,topArray(item.children)) : null;
     }
     return rs;
   }
