@@ -11,6 +11,15 @@
     }
   }
 })(this, function(){
+  var tostring = Object.prototype.toString,
+    push = Array.prototype.push,
+    slice = Array.prototype.slice,
+    shift = Array.prototype.shift,
+    unshift = Array.prototype.unshift,
+    isFunction = isType("Function"),
+    isArray = isType("Array"),
+    isString = isType("String"),
+    isObject = isType("Object");
   function urlparser(input){
     var hostchar = "(?:[\\w\\d$!])+",
       querychar = "(?:[^;\\\/?:@&=+,$#]+)",
@@ -62,13 +71,165 @@
     };
   };
   function remove$$hashKey(str){
-    let regex = /(?:,\s*\"\${2}hashKey\"\s*:\s*\"[^"]*\"\s*)|(?:\"\${2}hashKey\"\s*:\s*\"[^"]*\"\s*,)/g;
+    var regex = /(?:,\s*\"\${2}hashKey\"\s*:\s*\"[^"]*\"\s*)|(?:\"\${2}hashKey\"\s*:\s*\"[^"]*\"\s*,)/g;
     while(regex.test(str)){
       str = str.replace(regex, "");
     };
     console.log(str);
     return str;
   };
+  function jsonparser(str){
+    let json;
+    try {
+      json = JSON.parse(str);
+    } catch(e) {
+      console.error(e);
+      json = null;
+    } finally {
+      return json
+    }
+  }
+  function clone(obj){
+    return JSON.parse(JSON.stringify(obj));
+  }
+  function extend(a, b){
+    for(var i in b){
+      a[i] = b[i];
+    }
+    return a;
+  }
+  function isType(type){
+    return function(obj){
+      return tostring.call(obj) == "[object " + type + "]" && obj === obj;
+    }
+  }
+  function find(arr, callback){
+    var i;
+    arr = arr || [];
+    for(var i = 0; i < arr.length; i++){
+      if(callback(arr[i], i)){
+        return arr[i];
+      }
+    }
+  }
+  function filter(arr, callback){
+    var i, rs = [];
+    arr = arr || [];
+    for(var i = 0; i < arr.length; i++){
+      if(callback(arr[i], i)){
+        rs.push(arr[i]);
+      }
+    }
+    return rs;
+  }
+  function each(arr, callback){
+    var i;
+    arr = arr || [];
+    for(i=0; i<arr.length; i++){
+      callback && callback(arr[i], i);
+    }
+  }
+  function eachProp(obj, callback){
+    var i;
+    obj = obj || {};
+    for(var i in obj){
+      callback && callback(obj[i], i);
+    }
+  }
+  function pushDiff(a, b){
+    var i = 0;
+    a = a || [];
+    b = b || [];
+    for(; i < b.length; i++){
+      if(a.indexOf(b[i]) === -1){
+        a.push(b[i])
+      }
+    }
+    return a.length;
+  }
+  function addStyle(elem, style){
+    eachProp(style, function(n, i){
+      elem.style[i] = n;
+    })
+  }
+  function setStyle(dom, style){
+    style && eachProp(style, function(elem, attr){
+      dom.style[attr] = elem;
+    })
+  }
+  function getStyle(dom, name){
+    
+  }
+  function addClass(elem, cls){
+    var oldcls = elem.getAttribute("class"),
+      oldClsList = isString(oldcls) ? oldcls.split(" ") : [],
+      clsList = cls.split(" ");
+    pushDiff(oldClsList, clsList);
+    elem.setAttribute("class", oldClsList.join(" "));
+  }
+  function setClass(elem, cs){
+    elem.setAttribute("class", cs);
+  }
+  function hasClass(elem, cls){
+    if(elem && typeof elem.getAttribute === "function"){
+      var oldcls = elem.getAttribute("class"),
+        oldClsList = isString(oldcls) ? oldcls.split(" ") : [];
+      return oldClsList.indexOf(cls) != -1;
+    } else {
+      return false;
+    }
+  }
+  function removeClass(elem, cls){
+    if(!(elem && typeof elem.getAttribute === "function")){
+      return;
+    }
+    var oldcls = elem.getAttribute("class"),
+      oldClsList = isString(oldcls) ? oldcls.split(" ") : [],
+      i = oldClsList.indexOf(cls);
+    i != -1 && oldClsList.splice(i, 1);
+    elem.setAttribute("class", oldClsList.join(" "));
+  }
+  function appendChildren(){
+    var self = this;
+    var arr = slice.call(arguments, 0);
+    each(arr, function(el){
+      self.append(el);
+    })
+  }
+  function screenOffset(context){
+    var target = context,
+      x = target.offsetLeft,
+      y = target.offsetTop;
+    while(target = target.offsetParent){
+      x += target.offsetLeft + target.clientLeft - target.scrollLeft;
+      y += target.offsetTop + target.clientTop - target.scrollTop;
+    }
+    return {
+      left : x,
+      top : y
+    }
+  }
+  function createElement(tag){
+    return document.createElement(tag);
+  }
+  function createDocumentFragment(){
+    return document.createDocumentFragment();
+  }
+  function findElement(context, callback){
+    var stack = context.children,len, item;
+    while(item=stack.pop()){
+      if(callback(item)){ return item; }
+      item.children ? push.apply(stack,item.children) : null;
+    }
+  }
+  function filterElement(context, callback){
+    var stack = context.children,len, item, rs = [];
+    while(item=stack.pop()){
+      callback(item) ? rs.push(item) : null;
+      item.children ? push.apply(stack,item.children) : null;
+    }
+    return rs;
+  }
   var dh = (function(){
     /**
      * Date Handler Created by leonlin.
@@ -367,6 +528,30 @@
     return DateHandler;
   })()
   return {
+    isFunction : isFunction,
+    isArray : isArray,
+    isString : isString,
+    isObject : isObject,
+    addStyle : addStyle,
+    setStyle : setStyle,
+    addClass : addClass,
+    setClass : setClass,
+    hasClass : hasClass,
+    removeClass : removeClass,
+    appendChildren : appendChildren,
+    createElement : createElement,
+    createDocumentFragment : createDocumentFragment,
+    findElement : findElement,
+    filterElement : filterElement,
+    screenOffset : screenOffset,
+    each : each,
+    eachProp : eachProp,
+    find : find,
+    filter : filter,
+    isType : isType,
+    clone : clone,
+    extend : extend,
+    jsonparser : jsonparser,
     urlparser : urlparser,
     dateparser : dh,
     remove$$hashKey : remove$$hashKey
