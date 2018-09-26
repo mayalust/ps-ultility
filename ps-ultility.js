@@ -1,6 +1,6 @@
 (function(global, factory){
   if(typeof window === "undefined"){
-    if(typeof module !== "undefined" && typeof module.exports === "function"){
+    if(typeof module !== "undefined"){
       module.exports = factory();
     }
   } else {
