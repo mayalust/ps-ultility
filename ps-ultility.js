@@ -199,6 +199,16 @@
     i != -1 && oldClsList.splice(i, 1);
     elem.setAttribute("class", oldClsList.join(" "));
   }
+  function hasParent(elem, target){
+    var parent = elem;
+    while(parent){
+      if(parent === target){
+        return true;
+      }
+      parent = parent.parent;
+    }
+    return false;
+  }
   function appendChildren(){
     var self = this;
     var arr = slice.call(arguments, 0);
@@ -551,6 +561,7 @@
     addClass : addClass,
     setClass : setClass,
     hasClass : hasClass,
+    hasParent : hasParent,
     removeClass : removeClass,
     appendChildren : appendChildren,
     createElement : createElement,
