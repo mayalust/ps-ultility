@@ -205,7 +205,7 @@
       if(parent === target){
         return true;
       }
-      parent = parent.parent;
+      parent = parent.parentElement;
     }
     return false;
   }
