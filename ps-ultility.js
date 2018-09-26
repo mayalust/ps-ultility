@@ -76,7 +76,6 @@
     while(regex.test(str)){
       str = str.replace(regex, "");
     };
-    console.log(str);
     return str;
   };
   function jsonparser(str){
@@ -89,6 +88,16 @@
     } finally {
       return json
     }
+  }
+  function random(){
+    var chars = `abcdedfghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890`,
+      rs = "", rnd, len = chars.length;
+    for(var i = 0; i < length; i++){
+      rnd = parseInt( Math.random() * len );
+      rs += chars[rnd];
+    }
+    console.dir(rs);
+    return rs;
   }
   function clone(obj){
     return JSON.parse(JSON.stringify(obj));
@@ -532,6 +541,7 @@
     return DateHandler;
   })()
   return {
+    random : random,
     isFunction : isFunction,
     isArray : isArray,
     isString : isString,
