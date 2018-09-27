@@ -221,8 +221,13 @@
       x = target.offsetLeft,
       y = target.offsetTop;
     while(target = target.offsetParent){
-      x += target.offsetLeft + target.clientLeft - target.scrollLeft;
-      y += target.offsetTop + target.clientTop - target.scrollTop;
+      x += target.offsetLeft + target.clientLeft;
+      y += target.offsetTop + target.clientTop;
+    }
+    target = context;
+    while(target = target.parentElement){
+      x -= target.scrollLeft;
+      y -= target.scrollTop;
     }
     return {
       left : x,
