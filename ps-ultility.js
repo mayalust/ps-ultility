@@ -89,7 +89,7 @@
       return json
     }
   }
-  function random(){
+  function random(length){
     var chars = `abcdedfghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890`,
       rs = "", rnd, len = chars.length;
     for(var i = 0; i < length; i++){
