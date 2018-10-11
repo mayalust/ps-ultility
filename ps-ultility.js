@@ -17,6 +17,8 @@
     slice = Array.prototype.slice,
     shift = Array.prototype.shift,
     unshift = Array.prototype.unshift,
+    isUndefined = isType("Undefined"),
+    isNull = isType("Null"),
     isFunction = isType("Function"),
     isArray = isType("Array"),
     isString = isType("String"),
@@ -557,6 +559,8 @@
   })()
   return {
     random : random,
+    isUndefined : isUndefined,
+    isNull : isNull,
     isFunction : isFunction,
     isArray : isArray,
     isString : isString,
