@@ -146,15 +146,15 @@
       callback && callback(obj[i], i);
     }
   }
+  function isEmpty(obj){
+    return isUndefined(obj) || isNull(obj)
+  }
   function pushDiff(a, b){
-    var i = 0;
     a = a || [];
-    b = b || [];
-    for(; i < b.length; i++){
-      if(a.indexOf(b[i]) === -1){
-        a.push(b[i])
-      }
-    }
+    b = isEmpty(b) ? [] : ( isArray(b) ? b : [b] );
+    each(b, function(n){
+      a.indexOf(n) === -1 ? a.push(n) : null;
+    });
     return a.length;
   }
   function addStyle(elem, style){
@@ -575,6 +575,7 @@
     filterElement : filterElement,
     screenOffset : screenOffset,
     each : each,
+    pushDiff : pushDiff,
     eachProp : eachProp,
     find : find,
     filter : filter,
