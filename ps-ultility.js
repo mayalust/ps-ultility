@@ -22,6 +22,7 @@
     isFunction = isType("Function"),
     isArray = isType("Array"),
     isString = isType("String"),
+    isNumber = isType("Number"),
     isObject = isType("Object");
   function urlparser(input){
     var hostchar = "(?:[\\w\\d$!])+",
@@ -564,6 +565,7 @@
     isFunction : isFunction,
     isArray : isArray,
     isString : isString,
+    isNumber : isNumber,
     isObject : isObject,
     addStyle : addStyle,
     setStyle : setStyle,
