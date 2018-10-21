@@ -105,14 +105,16 @@
   function clone(obj){
     return JSON.parse(JSON.stringify(obj));
   }
-  function attribute(obj, attr){
+  function attribute(obj, attr, val){
     if(attr[0] !== "[" && attr[0] !== "."){
       attr = "." + attr;
     };
-    var fn = new Function("o", `return o${attr}`)
+    var fn = typeof val === "undefined"
+      ? new Function("o", "val", `return o${attr}`)
+      : new Function("o", "val", `o${attr} = val`)
       , rs = null;
     try {
-      rs = fn(obj, attr)
+      rs = fn(obj, val, attr);
     } catch(e) {
 
     } finally {

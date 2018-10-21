@@ -17,5 +17,5 @@ let a = {
     }]
   }
 };
-
+ultility.attribute(a, "['b'][1]", "asdasdasd");
 console.log(ultility.attribute(a, "['b'][1]"));
