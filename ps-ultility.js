@@ -109,17 +109,24 @@
     if(attr[0] !== "[" && attr[0] !== "."){
       attr = "." + attr;
     };
-    var fn = typeof val === "undefined"
-      ? new Function("o", "val", `return o${attr}`)
-      : new Function("o", "val", `o${attr} = val`)
-      , rs = null;
-    try {
-      rs = fn(obj, val, attr);
-    } catch(e) {
-
-    } finally {
-      return rs;
+    var regex = /\[\'(\w+)\'\]|\[\"(\w+)\"\]|\[(\d+)\]|\.(\w+)/g;
+    let sofar = attr, match, key, isVal;
+    while(match = regex.exec(sofar)){
+      regex.lastIndex = 0;
+      key = match[1] || match[2] || match[3] || match[4];
+      sofar = sofar.slice(match[0].length);
+      if(typeof val === "undefined"){
+        if(obj[key]){
+          obj = obj[key];
+        } else{
+          return null;
+        }
+      } else {
+        obj = obj[key] = regex.test(sofar) ? ( obj[key] || {} ) : val;
+        regex.lastIndex = 0;
+      }
     }
+    return obj;
   }
   function deepClone(obj){
     let rs = recursive(obj);
