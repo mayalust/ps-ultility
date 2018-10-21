@@ -105,6 +105,21 @@
   function clone(obj){
     return JSON.parse(JSON.stringify(obj));
   }
+  function deepClone(obj){
+    let rs = recursive(obj);
+    function recursive(node){
+      let rs = node instanceof Array ? [] : {};
+      for(var i in node){
+        if(typeof node[i] === "object"){
+          rs[i] = recursive(node[i]);
+        } else {
+          rs[i] = node[i]
+        }
+      }
+      return rs;
+    }
+    return rs;
+  }
   function extend(a, b){
     for(var i in b){
       a[i] = b[i];
@@ -587,6 +602,7 @@
     filter : filter,
     isType : isType,
     clone : clone,
+    deepClone : deepClone,
     extend : extend,
     jsonparser : jsonparser,
     urlparser : urlparser,
