@@ -105,6 +105,20 @@
   function clone(obj){
     return JSON.parse(JSON.stringify(obj));
   }
+  function attribute(obj, attr){
+    if(attr[0] !== "[" && attr[0] !== "."){
+      attr = "." + attr;
+    };
+    var fn = new Function("o", `return o${attr}`)
+      , rs = null;
+    try {
+      rs = fn(obj, attr)
+    } catch(e) {
+
+    } finally {
+      return rs;
+    }
+  }
   function deepClone(obj){
     let rs = recursive(obj);
     function recursive(node){
@@ -607,6 +621,7 @@
     jsonparser : jsonparser,
     urlparser : urlparser,
     dateparser : dh,
-    remove$$hashKey : remove$$hashKey
+    remove$$hashKey : remove$$hashKey,
+    attribute : attribute
   }
 });

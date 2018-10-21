@@ -18,5 +18,4 @@ let a = {
   }
 };
 
-let b = ultility.deepClone(a);
-console.log(b === a);
+console.log(ultility.attribute(a, "['b'][1]"));
