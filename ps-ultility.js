@@ -106,6 +106,9 @@
     return JSON.parse(JSON.stringify(obj));
   }
   function attribute(obj, attr, val){
+    if(typeof obj !== "object"){
+      return undefined;
+    }
     if(attr[0] !== "[" && attr[0] !== "."){
       attr = "." + attr;
     };
@@ -119,7 +122,7 @@
         if(obj[key]){
           obj = obj[key];
         } else{
-          return null;
+          return undefined;
         }
       } else {
         obj = obj[key] = regex.test(sofar) ? ( obj[key] || {} ) : val;
