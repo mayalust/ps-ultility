@@ -122,9 +122,7 @@
     return [tree];
   }
   function attribute(obj, attr, val){
-    if(typeof obj !== "object"){
-      return undefined;
-    }
+    if(!isObject(obj)){ return undefined; }
     if(attr[0] !== "[" && attr[0] !== "."){
       attr = "." + attr;
     };
