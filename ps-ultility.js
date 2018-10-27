@@ -105,6 +105,21 @@
   function clone(obj){
     return JSON.parse(JSON.stringify(obj));
   }
+  function list2Tree(list, fn, key){
+    let tree = null, key = key || 'children';
+    each(list, (n, i)=>{
+      var findParent = list.find((m, i)=>{
+        return fn(n, m);
+      });
+      if(!findParent){
+        tree = n;
+      } else {
+        findParent[key] = findParent[key] || [];
+        findParent[key].push(n);
+      }
+    });
+    return [tree];
+  }
   function attribute(obj, attr, val){
     if(typeof obj !== "object"){
       return undefined;
@@ -113,13 +128,13 @@
       attr = "." + attr;
     };
     var regex = /\[\'(\w+)\'\]|\[\"(\w+)\"\]|\[(\d+)\]|\.(\w+)/g;
-    let sofar = attr, match, key, isVal;
+    let sofar = attr, match, key;
     while(match = regex.exec(sofar)){
       regex.lastIndex = 0;
       key = match[1] || match[2] || match[3] || match[4];
       sofar = sofar.slice(match[0].length);
       if(typeof val === "undefined"){
-        if(obj[key]){
+        if(typeof obj[key] !== "undefined"){
           obj = obj[key];
         } else{
           return undefined;
@@ -624,6 +639,7 @@
     each : each,
     pushDiff : pushDiff,
     eachProp : eachProp,
+    list2Tree : list2Tree,
     find : find,
     filter : filter,
     isType : isType,
