@@ -106,8 +106,9 @@
     return JSON.parse(JSON.stringify(obj));
   }
   function list2Tree(list, fn, key){
-    let tree = null, key = key || 'children';
-    each(list, (n, i)=>{
+    let tree = null;
+    key = key || 'children';
+    each(list, ( n )=>{
       var findParent = list.find((m, i)=>{
         return fn(n, m);
       });
