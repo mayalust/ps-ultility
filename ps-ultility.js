@@ -134,7 +134,7 @@
       key = match[1] || match[2] || match[3] || match[4];
       sofar = sofar.slice(match[0].length);
       if(typeof val === "undefined"){
-        if(typeof obj[key] !== "undefined"){
+        if(isObject(obj) && typeof obj[key] !== "undefined"){
           obj = obj[key];
         } else{
           return undefined;
