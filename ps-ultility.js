@@ -126,10 +126,11 @@
     if(attr[0] !== "[" && attr[0] !== "."){
       attr = "." + attr;
     };
-    var regex = /\[\'(\w+)\'\]|\[\"(\w+)\"\]|\[(\d+)\]|\.(\w+)/g;
+    var attrRegex = "(?:[\\w$@])",
+      numRegex = "(?:[\\d])",
+      regex = "\\[\\\'(" + attrRegex + "+)\\\'\\]|\\[\\\"(" + attrRegex + "+)\\\"\\]|\\[(" + numRegex + "+)\\]|\\.(" + attrRegex + "+)";
     let sofar = attr, match, key;
-    while(match = regex.exec(sofar)){
-      regex.lastIndex = 0;
+    while(match = new RegExp(regex).exec(sofar)){
       key = match[1] || match[2] || match[3] || match[4];
       sofar = sofar.slice(match[0].length);
       if(typeof val === "undefined"){
@@ -139,8 +140,7 @@
           return undefined;
         }
       } else {
-        obj = obj[key] = regex.test(sofar) ? ( obj[key] || {} ) : val;
-        regex.lastIndex = 0;
+        obj = obj[key] = new RegExp(regex).test(sofar) ? ( obj[key] || {} ) : val;
       }
     }
     return obj;
