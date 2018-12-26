@@ -99,7 +99,6 @@
       rnd = parseInt( Math.random() * len );
       rs += chars[rnd];
     }
-    console.dir(rs);
     return rs;
   }
   function clone(obj){
@@ -638,6 +637,7 @@
     each : each,
     pushDiff : pushDiff,
     eachProp : eachProp,
+    list2tree : list2Tree,
     list2Tree : list2Tree,
     find : find,
     filter : filter,
