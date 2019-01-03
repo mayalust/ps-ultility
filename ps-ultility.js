@@ -279,6 +279,18 @@
       match = new RegExp(regex, "g").exec(path);
     return match ? match[1] : null;
   }
+  function getFileName(path) {
+    var unit = "[^.\\\\\\/]",
+      regex = "^.*(?:\\\\|\\/)("+ unit + "+)\\." + unit + "+$",
+      match = new RegExp(regex, "g").exec(path);
+    return match ? match[1] : null;
+  }
+  function getFileExt(path) {
+    var unit = "[^.\\\\\\/]",
+      regex = "\\.(" + unit + "+)$",
+      match = new RegExp(regex, "g").exec(path);
+    return match ? match[1] : null;
+  }
   function screenOffset(context){
     var target = context,
       x = target.offsetLeft,
@@ -647,6 +659,8 @@
     list2Tree : list2Tree,
     find : find,
     getFilePath : getFilePath,
+    getFileName : getFileName,
+    getFileExt : getFileExt,
     filter : filter,
     isType : isType,
     clone : clone,
