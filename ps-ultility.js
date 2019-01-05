@@ -362,11 +362,15 @@
       DAYTIMESTAMP = 24 * HOURTIMESTAMP,
       OFFSET = "0800",
       events = {};
-    function extend(self, target){
-      var cur = self;
-      for(var i in target){
-        cur[i] = target[i];
+    function extend(){
+      var args = [].slice.call( arguments ),
+        cur = args.shift(), target;
+      while(target = args.shift()){
+        for(var i in target){
+          cur[i] = target[i];
+        }
       }
+      return cur;
     };
     function to2Char(num){
       if(num < 10){
