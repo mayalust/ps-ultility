@@ -224,8 +224,103 @@
       dom.style[attr] = elem;
     })
   }
-  function getStyle(dom, name){
-
+  function tree(key){
+    key = key || "children";
+    function creatRecursive(config){
+      config = config || {};
+      var onMatch = config.match || function(){},
+        onEnd = config.end || function(){};
+      return function(node, callback){
+        var queue = isArray(node) ? node.map(function(n, i){
+          return createItem(n, i, [], node);
+        }) : [ createItem(node, 0, [], [node]) ], item, node, list, condi, stop;
+        function createItem( node, index, parentNodes, parentlist ){
+          return {
+            node : node,
+            index : index,
+            parentNodes : parentNodes,
+            parentlist : parentlist
+          }
+        }
+        function values(obj){
+          var rs = [];
+          for(var i in obj){
+            rs.push(obj[i]);
+          }
+          return rs;
+        }
+        while( item = queue.shift()){
+          node = item.node;
+          list = isArray(node[key]) ? node[key] : [];
+          condi = typeof callback === "function"
+            ? callback.apply(null, values(item)) : null;
+          if(condi === true){
+            stop = onMatch( node )
+            if( typeof stop !== "undefined"){
+              return stop;
+            };
+          }
+          [].push.apply(queue, list.map(function(n, i){
+            return createItem(n, i, item.parentNodes.concat(node) ,list);
+          }));
+        }
+        stop = onEnd( node )
+        if( typeof stop !== "undefined"){
+          return stop;
+        };
+      }
+    }
+    function reverseCondition(callback){
+      return function(){
+        return !callback.apply(null, arguments);
+      }
+    }
+    function forEach(node, callback){
+      creatRecursive()(node, callback);
+    }
+    function find(node, callback){
+      return creatRecursive({
+        match : function(n){
+          return n;
+        }
+      })(node, callback)
+    }
+    function filter(node, callback){
+      var rs = [];
+      creatRecursive()(node, function() {
+        if(callback.apply(null, arguments)){
+          rs.push(arguments[0]);
+        };
+      });
+      return rs;
+    }
+    function every(node, callback){
+      return creatRecursive({
+        match : function(n){
+          return false;
+        },
+        end : function(){
+          return true;
+        }
+      })(node, reverseCondition(callback))
+    }
+    function some(node, callback){
+      return creatRecursive({
+        match : function(n){
+          return true;
+        },
+        end : function(){
+          return false;
+        }
+      })(node, callback)
+    }
+    return {
+      forEach : forEach,
+      find : find,
+      filter : filter,
+      every : every,
+      some :some
+    }
   }
   function addClass(elem, cls){
     var oldcls = elem.getAttribute("class"),
@@ -657,6 +752,7 @@
     filterElement : filterElement,
     screenOffset : screenOffset,
     each : each,
+    tree : tree,
     pushDiff : pushDiff,
     eachProp : eachProp,
     list2tree : list2Tree,
