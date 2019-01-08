@@ -817,6 +817,7 @@
     screenOffset : screenOffset,
     each : each,
     tree : tree,
+    requirejs : requirejs,
     requireCss : requireCss,
     pushDiff : pushDiff,
     eachProp : eachProp,
