@@ -135,8 +135,7 @@
   function requireCss(css, callback){
     function loadCss(url, callback){
       if( typeof cssCached(url) !== "undefined" ){
-        callback( cssCached(url) );
-        return;
+        cssCached(url).remove();
       }
       let link = document.createElement("link");
       link.setAttribute("rel", "stylesheet");
@@ -144,7 +143,7 @@
       link.setAttribute("href", url);
       document.head.appendChild(link);
       link.onload = function(e){
-        cssCached( url, e );
+        cssCached( url, link );
         typeof callback === "function" ? callback(e) : null;
       }
     }
