@@ -29,7 +29,7 @@
   function createCache(){
     var keys = [];
     var cached = function( key, value ){
-      if ( typeof value !== "undefine"){
+      if ( typeof value !== "undefined"){
         keys.push( key );
         cached["__" + key] = value;
       } else {
