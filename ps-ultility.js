@@ -23,7 +23,24 @@
     isArray = isType("Array"),
     isString = isType("String"),
     isNumber = isType("Number"),
-    isObject = isType("Object");
+    isObject = isType("Object"),
+    requireCached = createCache(),
+    cssCached = createCache();
+  function createCache(){
+    var keys = [];
+    var cached = function( key, value ){
+      if ( typeof value !== "undefine"){
+        keys.push( key );
+        cached["__" + key] = value;
+      } else {
+        return cached["__" + key];
+      }
+    };
+    cached.keys = function(){
+      return keys;
+    }
+    return cached
+  }
   function urlparser(input){
     var hostchar = "(?:[\\w\\d$!])+",
       querychar = "(?:[^;\\\/?:@&=+,$#]+)",
@@ -91,6 +108,53 @@
     } finally {
       return json
     }
+  }
+
+  function requirejs( require, deps, callback ){
+    var rs = [];
+    function load( deps ){
+      var url = deps.shift(),
+        cache = requireCached(url)
+      if( !url ){
+        callback.apply( window, rs );
+        return;
+      }
+      if( cache ){
+        rs.push(cache);
+        load(deps);
+      } else {
+        require([url], function(n) {
+          rs.push(n);
+          load(deps);
+        })
+      }
+    }
+    load( deps );
+  }
+
+  function requireCss(css, callback){
+    function loadCss(url, callback){
+      if( typeof cssCached(url) !== "undefined" ){
+        callback( cssCached(url) );
+        return;
+      }
+      let link = document.createElement("link");
+      link.setAttribute("rel", "stylesheet");
+      link.setAttribute("type", "text/css");
+      link.setAttribute("href", url);
+      document.head.appendChild(link);
+      link.onload = function(e){
+        cssCached( url, e );
+        typeof callback === "function" ? callback(e) : null;
+      }
+    }
+    function load(css){
+      let url = css.shift();
+      url ? loadCss(url, function(e){
+        load(css);
+      }) : ( typeof callback == "function" ? callback() : null );
+    }
+    load(css)
   }
   function random(length){
     var chars = `abcdedfghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890`,
@@ -753,6 +817,7 @@
     screenOffset : screenOffset,
     each : each,
     tree : tree,
+    requireCss : requireCss,
     pushDiff : pushDiff,
     eachProp : eachProp,
     list2tree : list2Tree,
