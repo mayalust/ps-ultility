@@ -222,12 +222,16 @@
     }
     return rs;
   }
-  function extend(a, b){
-    for(var i in b){
-      a[i] = b[i];
+  function extend(){
+    var args = [].slice.call( arguments ),
+      cur = args.shift(), target;
+    while(target = args.shift()){
+      for(var i in target){
+        cur[i] = target[i];
+      }
     }
-    return a;
-  }
+    return cur;
+  };
   function isType(type){
     return function(obj){
       return tostring.call(obj) == "[object " + type + "]" && obj === obj;
