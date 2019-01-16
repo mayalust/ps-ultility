@@ -156,6 +156,7 @@
     load(css)
   }
   function random(length){
+    length = length || 16;
     var chars = `abcdedfghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890`,
       rs = "", rnd, len = chars.length;
     for(var i = 0; i < length; i++){
