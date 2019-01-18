@@ -155,6 +155,19 @@
     }
     load(css)
   }
+  function camelhill( str ){
+    var rs = "",
+      arr = [].slice.call(str),
+      char;
+    while( char = arr.shift()){
+      if( char === "-"){
+        char = arr.shift();
+        char = typeof char === "undefined" ? "" : char.toUpperCase();
+      }
+      rs += char;
+    }
+    return rs;
+  }
   function random(length){
     length = length || 16;
     var chars = `abcdedfghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890`,
@@ -834,6 +847,7 @@
     filter : filter,
     isType : isType,
     clone : clone,
+    camelhill : camelhill,
     deepClone : deepClone,
     extend : extend,
     jsonparser : jsonparser,
