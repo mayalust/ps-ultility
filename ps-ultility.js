@@ -327,9 +327,14 @@
       var onMatch = config.match || function(){},
         onEnd = config.end || function(){};
       return function(node, callback){
-        var queue = isArray(node) ? node.map(function(n, i){
-          return createItem(n, i, [], node);
-        }) : [ createItem(node, 0, [], [node]) ], item, node, list, condi, stop;
+        var queue, item, node, list, condi, stop;
+        if(typeof node === "object" || node !== null){
+          queue = isArray(node) ? node.map(function(n, i){
+            return createItem(n, i, [], node);
+          }) : [ createItem(node, 0, [], [node]) ];
+        } else {
+          queue = [];
+        }
         function createItem( node, index, parentNodes, parentlist ){
           return {
             node : node,
