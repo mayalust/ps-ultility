@@ -41,56 +41,71 @@
     }
     return cached
   }
-  function urlparser(input){
-    var hostchar = "(?:[\\w\\d$!])+",
-      querychar = "(?:[^;\\\/?:@&=+,$#]+)",
-      protocol = "^(?:([\\w]+)\\:\/\/)?",
-      pathchar = "(?:[^\/?;=]+)",
-      host = "(" + hostchar + "(?:\\." + hostchar + ")*)",
-      port = "(?:\\:([\\d]+))?",
-      path = "(?:((?:\/" + pathchar + ")+))",
-      query = "(?:\\?((?:" + querychar + "=" + querychar + ")(?:\\&{1,2}" + querychar + "=" + querychar + ")*))?",
-      hash = "(#.*)?$",
-      queryExp = "^(?:\\&{1,2})?(" + querychar + ")=(" + querychar + ")",
-      pathExp = "^(?:\\\/?(" + pathchar + "))",
-      url = protocol + host + port + path + query + hash,
-      urlExp = new RegExp(protocol + host + port + path + query + hash, "g"),
-      match = urlExp.exec(input),
-      pathData = getPathData(match[4]),
-      queryData = getQueryData(match[5]);
-    function getQueryData(str){
-      if(!str){
-        return null;
-      }
-      var soFar = str, match, obj = {};
-      while( match = new RegExp(queryExp).exec(soFar)){
-        obj[match[1]] = match[2];
-        soFar = soFar.slice(match[0].length)
-      }
-      return obj
+  function urlparser( input ){
+    function splitByChar( str, char ){
+      var regex = "^([^" + char + "]+)\\" + char + "(.*)",
+        match = new RegExp( regex ).exec( str );
+      return match ? match.slice(1) : [ str ];
     }
-    function getPathData(str){
-      if(!str){
-        return null;
+    function slice( queue, target){
+      var obj = {}, item = queue.shift(), match;
+      if( item ){
+        match = new RegExp(item[1]).exec( target );
+        if( match ){
+          if( match[1] ){
+            obj[ item[0] ] = match[1];
+            extend( obj, slice( queue, match[2] ));
+          } else {
+            obj[ item[0] ] = match[0];
+          }
+        } else {
+          extend( obj, slice( queue, target ));
+        }
       }
-      var soFar = str, match, obj = [];
-      while( match = new RegExp(pathExp).exec(soFar)){
-        obj.push(match[1]);
-        soFar = soFar.slice(match[0].length)
-      }
-      return obj
+      return obj;
     }
-    return {
-      url : match[0],
-      protocol : match[1] ? match[1] : "http",
-      address : match[2],
-      port : match[3] ? match[3] - 0 : 80,
-      path : match[4] ? match[4] : "/",
-      patharr : pathData,
-      query : queryData,
-      hash : match[6]
-    };
-  };
+    function makeHost( url ){
+      var protocol = "^(?:([^:\\/]+)\\:\/\/)?",
+        address = "([^:/?\\#]+)",
+        port = "(?::(\\d+))?",
+        urlExp = protocol + address + port + "(.*)",
+        match = new RegExp( urlExp ).exec( url ),
+        u = match.shift(),
+        protocal = match.shift() || "http",
+        address = match.shift(),
+        port = ( match.shift() || 80 ) - 0,
+        path = match.shift() || "/";
+      return {
+        host :  protocal + "://" + address + ":" + port + path,
+        protocol : protocal,
+        address : address,
+        port : port,
+        path : path,
+      }
+    }
+    function makeQUery( query ){
+      var queue = query.split("&"), item, rs = {};
+      while(item = queue.shift()){
+        var dt = item.split("=");
+        rs[dt[0]] = dt[1];
+      }
+      return rs;
+    }
+    var match1 = splitByChar( input, "?" ),
+      host = match1[0],
+      hostObj = makeHost( host ),
+      rest = match1[1],
+      match2 = rest ? splitByChar( rest, "#" ) : [],
+      query = match2[0],
+      queryObj = query ? makeQUery( query ) : {},
+      hash = match2[1] || undefined,
+      rs = {
+        hash : hash
+      };
+    return extend( rs, hostObj, {
+      query : queryObj
+    });
+  }
   function remove$$hashKey(str){
     var regex = /(?:,\s*\"\${2}hashKey\"\s*:\s*\"[^"]*\"\s*)|(?:\"\${2}hashKey\"\s*:\s*\"[^"]*\"\s*,)/g;
     while(regex.test(str)){
