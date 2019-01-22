@@ -531,7 +531,9 @@
   }
   var pathResolver = {
     join : function(){
-      var arr = [], args = [].slice.call(arguments), item;
+      var arr = [], args = [].slice.call(arguments).map(function(d){
+        return typeof d === "string" ? d : "./"
+      }), item;
       function join( arr, append ){
         var item;
         while( item = append.shift()){
