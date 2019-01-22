@@ -529,7 +529,7 @@
     }
     return rs;
   }
-  var pathLib = {
+  var pathResolver = {
     join : function(){
       var arr = [], args = [].slice.call(arguments), item;
       function join( arr, append ){
@@ -880,7 +880,7 @@
     screenOffset : screenOffset,
     each : each,
     tree : tree,
-    path : pathLib,
+    pathResolver : pathResolver,
     requirejs : requirejs,
     requireCss : requireCss,
     pushDiff : pushDiff,
