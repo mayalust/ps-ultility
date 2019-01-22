@@ -539,13 +539,15 @@
         while( item = append.shift()){
           if( item == ".."){
             arr.pop();
+          } else if( item == "."){
+
           } else {
             arr.push( item );
           }
         }
       }
       function toPathAry(str){
-        return str.split("/").filter( function( d ){ return d && d !== "."});
+        return str.split("/").filter( function( d ){ return d });
       }
       if( args.length ){
         [].push.apply(arr, toPathAry(args.shift()));
