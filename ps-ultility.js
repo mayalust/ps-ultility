@@ -531,19 +531,19 @@
   }
   var pathResolver = {
     join : function(){
-      var arr = [], args = [].slice.call(arguments).map(function(d){
+      var arr = [], minus = [], args = [].slice.call(arguments).map(function(d){
         if(typeof d === "string"){
           return d;
         } else if( typeof d === "number" ){
           return d + "";
         }
-        return "./"
+        return "."
       }), item;
       function join( arr, append ){
         var item;
         while( item = append.shift()){
           if( item == ".."){
-            arr.pop();
+            arr.length ? arr.pop() : minus.push("..")
           } else if( item == "."){
 
           } else {
@@ -554,14 +554,13 @@
       function toPathAry(str){
         return str.split("/").filter( function( d ){ return d });
       }
-      if( args.length ){
-        [].push.apply(arr, toPathAry(args.shift()));
-      }
       while( item = args.shift()){
         item = toPathAry( item );
         join( arr, item );
       }
-      return arr.join("/")
+      return minus.length
+        ? minus.join("/") + "/" + arr.join("/")
+        : "./" + arr.join("/")
     }
   }
   var dh = (function(){
