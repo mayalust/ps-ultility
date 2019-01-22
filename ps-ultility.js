@@ -529,6 +529,32 @@
     }
     return rs;
   }
+  var pathLib = {
+    join : function(){
+      var arr = [], args = [].slice.call(arguments), item;
+      function join( arr, append ){
+        var item;
+        while( item = append.shift()){
+          if( item == ".."){
+            arr.pop();
+          } else {
+            arr.push( item );
+          }
+        }
+      }
+      function toPathAry(str){
+        return str.split("/").filter( function( d ){ return d && d !== "."});
+      }
+      if( args.length ){
+        [].push.apply(arr, toPathAry(args.shift()));
+      }
+      while( item = args.shift()){
+        item = toPathAry( item );
+        join( arr, item );
+      }
+      return arr.join("/")
+    }
+  }
   var dh = (function(){
     /**
      * Date Handler Created by leonlin.
@@ -854,6 +880,7 @@
     screenOffset : screenOffset,
     each : each,
     tree : tree,
+    path : pathLib,
     requirejs : requirejs,
     requireCss : requireCss,
     pushDiff : pushDiff,
