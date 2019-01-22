@@ -532,7 +532,12 @@
   var pathResolver = {
     join : function(){
       var arr = [], args = [].slice.call(arguments).map(function(d){
-        return typeof d === "string" ? d : "./"
+        if(typeof d === "string"){
+          return d;
+        } else if( typeof d === "number" ){
+          return d + "";
+        }
+        return "./"
       }), item;
       function join( arr, append ){
         var item;
