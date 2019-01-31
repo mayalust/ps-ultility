@@ -189,7 +189,7 @@
       char;
     while( char = arr.shift()){
       if( char === char.toUpperCase()){
-        char = char.toUpperCase()
+        char = char.toLowerCase();
         rs += "-";
       }
       rs += char;
