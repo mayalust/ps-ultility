@@ -183,6 +183,19 @@
     }
     return rs;
   }
+  function unCamelhill( str ){
+    var rs = "",
+      arr = [].slice.call(str),
+      char;
+    while( char = arr.shift()){
+      if( char === char.toUpperCase()){
+        char = char.toUpperCase()
+        rs += "-";
+      }
+      rs += char;
+    }
+    return rs;
+  }
   function random(length){
     length = length || 16;
     var chars = `abcdedfghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890`,
@@ -903,6 +916,7 @@
     isType : isType,
     clone : clone,
     camelhill : camelhill,
+    unCamelhill : unCamelhill,
     deepClone : deepClone,
     extend : extend,
     jsonparser : jsonparser,
