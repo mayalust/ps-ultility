@@ -599,6 +599,7 @@
       return new DateHandler.fn.init(dateStr);
     };
     var VERSION = "DateHandler v1.0.0",
+      ISDATEHANDLER = "isDateHandler",
       SECONDTIMESTAMP = 1000,
       MINUTETIMESTAMP = 60 * SECONDTIMESTAMP,
       HOURTIMESTAMP = 60 * MINUTETIMESTAMP,
@@ -678,22 +679,24 @@
     DateHandler.fn = DateHandler.prototype;
     DateHandler.fn.init = function(dateStr){
       var cur = this;
-      if(dateStr){
-        if(typeof dateStr == "object"){
-          cur.setDate(dateStr);
-        } else {
-          cur.setDate(new Date(dateStr));
-        }
-      } else {
-        cur.setDate(new Date());
-      };
       cur.on("dateChange", function(d){
         cur.setDate(d);
       });
+      if( typeof dateStr === "undefined"){
+        cur.setDate(new Date());
+        return;
+      }
+      if( typeof dateStr === "object" && dateStr.isDateHandler === "isDateHandler" ){
+        cur.setDate( dateStr.date );
+        return;
+      }
+      cur.setDate(typeof dateStr === "object"
+        ? dateStr : new Date(dateStr))
     };
     DateHandler.fn.init.prototype = DateHandler.fn
     extend(DateHandler.fn.init.prototype, {
       version : VERSION,
+      isDateHandler : ISDATEHANDLER,
       on : function(eventName, callback){
         events[eventName] = events[eventName] || [];
         events[eventName].push(callback);
