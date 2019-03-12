@@ -682,7 +682,7 @@
       cur.on("dateChange", function(d){
         cur.setDate(d);
       });
-      if( typeof dateStr === "undefined"){
+      if( typeof dateStr === "undefined" || dateStr === null){
         cur.setDate(new Date());
         return;
       }
