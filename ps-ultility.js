@@ -188,7 +188,7 @@
       arr = [].slice.call(str),
       char;
     while( char = arr.shift()){
-      if( /\w/.test(char) && char === char.toUpperCase()){
+      if( /[A-Z]/.test(char) ){
         char = char.toLowerCase();
         rs += "-";
       }
